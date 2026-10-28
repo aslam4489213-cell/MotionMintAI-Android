@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MotionMint AI</title>
+<style>
+:root{color-scheme:dark;--bg:#090b12;--panel:#151923;--line:#303746;--text:#eef2ff;--muted:#9ba7bd;--a:#8c78ff;--b:#43dfc3}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px system-ui;padding:14px}
+header{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:14px}.logo{font-size:22px;font-weight:800}.logo span{color:var(--b)}.pill{font-size:11px;border:1px solid #315c58;padding:6px 8px;border-radius:20px;color:#8ce9d8}
+h1{font-size:25px;margin:8px 0}p{color:var(--muted);line-height:1.5}.canvas{border:1px solid var(--line);border-radius:16px;min-height:290px;padding:12px;background-image:radial-gradient(#384057 1px,transparent 1px);background-size:20px 20px;overflow:hidden}
+.node{background:#171c28;border:1px solid #343d50;border-radius:12px;padding:12px;margin:10px 0;box-shadow:0 5px 16px #0005}.node h3{font-size:13px;margin:0 0 10px;color:#dbe3fa}.node small{color:var(--muted)}
+label{display:block;color:#c8d1e6;font-size:12px;margin:8px 0 5px}textarea,input,select{width:100%;background:#0d111b;color:white;border:1px solid #3a455c;border-radius:8px;padding:10px;font:inherit}textarea{min-height:80px}.two{display:grid;grid-template-columns:1fr 1fr;gap:9px}.btn{width:100%;padding:13px;border:0;border-radius:10px;background:linear-gradient(100deg,var(--a),var(--b));font-weight:800;color:#071019;margin-top:10px}.secondary{background:#222b3d;color:white;border:1px solid #3b4760}.status{background:#101621;border:1px solid #30394b;padding:11px;border-radius:10px;margin-top:12px;color:#cbd5e8;overflow-wrap:anywhere}.out{border:1px dashed #46516a;border-radius:12px;padding:18px;text-align:center;margin-top:10px}a{color:#82e6d5}
+</style></head><body>
+<header><div class="logo">✦ Motion<span>Mint</span> AI</div><div class="pill">ANDROID STUDIO</div></header>
+<h1>Node Workflow Studio</h1><p>Build your scene with prompt, frames, canvas and generation settings. This app shell does not yet run a private AI server.</p>
+<div class="canvas">
+ <div class="node"><h3>● PROMPT</h3><label>Describe your video</label><textarea id="prompt">A tiny fox explores a glowing forest at night, magical lights, cinematic camera movement.</textarea></div>
+ <div class="node"><h3>● FIRST FRAME (optional)</h3><input id="first" type="file" accept="image/*"></div>
+ <div class="node"><h3>● LAST FRAME (optional)</h3><input id="last" type="file" accept="image/*"></div>
+ <div class="node"><h3>● CANVAS</h3><select id="canvasSize"><option>960x544 · 16:9 fast</option><option>1024x576 · 16:9</option><option>1152x640 · 16:9</option></select>
+ <div class="two"><div><label>Duration (seconds)</label><select id="duration"><option>3</option><option selected>5</option><option>6</option></select></div><div><label>Steps</label><select id="steps"><option>4</option><option selected>8</option><option>28</option></select></div></div>
+ <label>Seed</label><input id="seed" type="number" value="123">
+ <label>Upsample prompt</label><select id="upsample"><option value="false">Off</option><option value="true">On</option></select>
+ <label>LoRA</label><select id="lora"><option>larry</option><option>lightx</option><option>mystic</option><option>off</option></select></div>
+</div>
+<button class="btn" id="run">▶ RUN AI VIDEO</button>
+<button class="btn secondary" id="export">Export workflow settings</button>
+<div class="status" id="status">Ready. Choose settings, then Run.</div>
+<div class="out"><strong>OUTPUT VIDEO</strong><p>When generation completes on the model's own Space, preview/download the result there.</p><a href="https://huggingface.co/spaces/glitchlab/MiniMax-H3-Turbo-Lora-UNCENSORED-Workflow" target="_blank" rel="noopener">Open MiniMax AI Space ↗</a></div>
+<script>
+const $=id=>document.getElementById(id);
+$('run').onclick=()=>{
+ const msg='This starter APK does not yet submit the workflow directly. Opening the official Space so you can run it there. If you see the GPU duration limit error, changing app settings alone may not remove the Space limit.';
+ $('status').textContent=msg;
+ window.location.href='https://huggingface.co/spaces/glitchlab/MiniMax-H3-Turbo-Lora-UNCENSORED-Workflow';
+};
+$('export').onclick=()=>{
+ const data={prompt:$('prompt').value,canvas:$('canvasSize').value,duration:Number($('duration').value),steps:Number($('steps').value),seed:Number($('seed').value),upsample:$('upsample').value==='true',lora:$('lora').value};
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='motionmint-workflow.json';a.click();URL.revokeObjectURL(a.href);$('status').textContent='Workflow settings exported.';
+};
+</script></body></html>
